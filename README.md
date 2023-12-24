@@ -40,22 +40,24 @@ I failed to put firestore into native mode.
 $ gcloud config set project curuviho 
 $ gcloud firestore databases update --type=firestore-native
 
+$ java --version
+openjdk 20.0.2 2023-07-18
+
 $ node --version
 v18.16.0
 
-$ npm create svelte@latest curuviho
-Which Svelte app template?
-  o Skeleton project
-Add type checking with TypeScript?
-  o Yes, using JavaScript with JSDoc comments
-Select additional options
-  o Add ESLint for code linting
-  o Add Prettier for code formatting
+$ fvm --version          
+2.4.1
 
+$ fvm list     
+stable
+3.13.9 (global)
+
+$ fvm flutter create -t app --platforms web curuviho
 $ cd curuviho
-$ npm i
-$ npm i -D @sveltejs/adapter-static
+$ fvm use 3.13.9
 
+$ npm init
 $ npm i firebase-tools -D
 $ npx firebase init
 
