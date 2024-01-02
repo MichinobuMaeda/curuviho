@@ -51,11 +51,11 @@ $ fvm --version
 
 $ fvm list     
 stable
-3.13.9 (global)
+3.16.5 (global)
 
 $ fvm flutter create -t app --platforms web curuviho
 $ cd curuviho
-$ fvm use 3.13.9
+$ fvm use 3.16.5
 
 $ npm init
 $ npm i firebase-tools -D
@@ -98,3 +98,7 @@ https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
 ```
 
 Create icons by <https://realfavicongenerator.net>.
+
+[Direct Workload Identity Federation](https://github.com/google-github-actions/auth)
+
+projects/913047262722/locations/global/workloadIdentityPools/github

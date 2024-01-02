@@ -6,15 +6,90 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - main
+    paths-ignore:
+      - '**/*.md'
+      - .github/workflows/firebase-hosting-pull-request.yml
 jobs:
   build_and_deploy:
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service_account.json
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci && npm run build
+      - run: echo NODE_ENV=production > functions/.env
+      - name: Create Service Account key
+        run:  echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }} > $GOOGLE_APPLICATION_CREDENTIALS
+
+      - name: Detect modified source
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            functions:
+              - 'functions/**'
+            firestore:
+              - 'firestore.*'
+            storage:
+              - 'storage.*'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache-dependency-path: 'package-lock.json'
+      - run: npm ci
+
+      - if: steps.filter.outputs.functions == 'true'
+        name: Cache functions/node_modules
+        uses: actions/cache@v2
+        id: cache-functions-node_modules
+        with:
+          path: functions/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('functions/package-lock.json ') }}
+      - if: steps.filter.outputs.functions == 'true'
+        name: Test and Deploy Functions
+        run: |
+          npm ci --prefix functions && \
+          npm test --prefix functions && \
+          npx firebase deploy --only functions --force
+      - if: steps.filter.outputs.firestore == 'true'
+        name: Deploy Firestore
+        run: npx firebase deploy --only firestore
+      - if: steps.filter.outputs.storage == 'true'
+        name: Deploy Storage
+        run: npx firebase deploy --only storage
+
+
+      - name: Set firebase api key
+        run: |
+          sed 's/FIREBASE_API_KEY/${{ secrets.FIREBASE_API_KEY_CURUVIHO }}/' \
+            -i lib/env.dart
+      - name: Set UI version
+        run: |
+          VERSION=`grep 'version:' pubspec.yaml | sed 's/.*\s//'` && \
+            sed "s/for\ test/$VERSION/" -i lib/env.dart  && \
+            echo "{\"version\":\"$VERSION\"}" > web/version.json && \
+            echo $VERSION
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
+        id: fvm-config-action
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: ${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+      - run: flutter pub get
+      # - run: flutter gen-l10n
+      - run: flutter build web
+      - run: flutter test --coverage
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }}'
           channelId: live
           projectId: curuviho
+      - name: Trigger system update job
+        run: npx firebase firestore:delete service/upgrade --force
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info,./functions/coverage/lcov.info
