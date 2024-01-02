@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
       - run: echo NODE_ENV=production > functions/.env
       - name: Create Service Account key
-        run:  echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }}' > $RUNNER_TEMP/service_account.json
+        run:  echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }}' > $GITHUB_ACTION_PATH/service_account.json
 
       - name: Detect modified source
         uses: dorny/paths-filter@v2
@@ -50,17 +50,17 @@ jobs:
           npm test --prefix functions && \
           npx firebase deploy --only functions --force
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
+          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_ACTION_PATH/service_account.json
       - if: steps.filter.outputs.firestore == 'true'
         name: Deploy Firestore
         run: npx firebase deploy --only firestore
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
+          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_ACTION_PATH/service_account.json
       - if: steps.filter.outputs.storage == 'true'
         name: Deploy Storage
         run: npx firebase deploy --only storage
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
+          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_ACTION_PATH/service_account.json
 
 
       - name: Set firebase api key
@@ -92,9 +92,9 @@ jobs:
           channelId: live
           projectId: curuviho
       - name: Trigger system update job
-        run: npx firebase firestore:delete service/upgrade --force
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
+        run: |
+          npx firebase firestore:delete service/upgrade --force \
+          -j $GITHUB_ACTION_PATH/service_account.json
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
