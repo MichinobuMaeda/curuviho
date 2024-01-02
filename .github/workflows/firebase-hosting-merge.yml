@@ -93,6 +93,8 @@ jobs:
           projectId: curuviho
       - name: Trigger system update job
         run: npx firebase firestore:delete service/upgrade --force
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
