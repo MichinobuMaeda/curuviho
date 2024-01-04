@@ -14,20 +14,21 @@ async function restoreTriggerDoc(event) {
 /**
  * Upgrade system on deployment.
  * @param {object} db Firestore
+ * @param {object} auth Firestore
  */
 async function upgradeData(db) {
   const confRef = db.collection("service").doc("conf");
   const confDoc = await confRef.get();
-  let currentVersion = confDoc.exists ? confDoc.data().dataVersion : 0;
+  const currentVersion = confDoc.exists ? confDoc.data().dataVersion : 0;
   logger.info(`current data version: ${currentVersion}.`);
+
   const ts = new Date();
   const createdAt = ts;
   const updatedAt = ts;
 
   if (!confDoc.exists) {
-    currentVersion = 1;
     await confRef.set({
-      dataVersion: currentVersion,
+      dataVersion: 0,
       uiVersion: "",
       createdAt,
       updatedAt,
@@ -35,14 +36,45 @@ async function upgradeData(db) {
   }
 
   const dataVersion = 1;
-  logger.info(`latest data version: ${dataVersion}.`);
 
-  if (currentVersion === dataVersion) return;
+  if (currentVersion === dataVersion) {
+    logger.info("Skip to upgrade data.");
+    return;
+  }
 
-  // Do something.
-  //
-  // await confRef.update({dataVersion, updatedAt});
-  // logger.info(`set data version: ${dataVersion}`);
+  if (currentVersion === 0) {
+    logger.info("upgrade data 0 to 1.");
+
+    const adminRef = db.collection("groups").doc("admin");
+    const adminDoc = await adminRef.get();
+
+    if (!adminDoc.exists) {
+      const accountDoc = await db.collection("accounts").add({
+        createdAt,
+        updatedAt,
+      });
+
+      const userDoc = await db.collection("users").add({
+        accounts: [accountDoc.id],
+        name: "Primary user",
+        createdAt,
+        updatedAt,
+      });
+
+      await adminRef.set({
+        users: [userDoc.id],
+        createdAt,
+        updatedAt,
+      });
+    }
+  }
+
+  logger.info(`set data version: ${dataVersion}.`);
+  await confRef.update({
+    dataVersion,
+    createdAt,
+    updatedAt,
+  });
 }
 
 /**

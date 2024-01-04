@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'env.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    name: defaultFirebaseAppName,
+    options: const FirebaseOptions(
+      apiKey: apiKey,
+      authDomain: "curuviho.firebaseapp.com",
+      projectId: "curuviho",
+      storageBucket: "curuviho.appspot.com",
+      messagingSenderId: "913047262722",
+      appId: "1:913047262722:web:db01455e661c6046df791b",
+      measurementId: "G-NKBCK0LNBW",
+    ),
+  );
+  await FirebaseAppCheck.instance.activate(
+    webProvider: ReCaptchaV3Provider(webRecaptchaSiteKey),
+    // androidProvider: AndroidProvider.debug,
+    // appleProvider: AppleProvider.appAttest,
+  );
   runApp(const MyApp());
 }
 

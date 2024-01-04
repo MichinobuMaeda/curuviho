@@ -1,5 +1,14 @@
 # Curuviho
 
+## Data structure
+
+```mermaid
+classDiagram
+    Auth "1" -- "1" Account
+    Account "*" -- "0..1" User
+    User "*" -- "*" Group
+```
+
 ## Create this project
 
 <https://console.firebase.google.com/>
@@ -14,6 +23,7 @@
         - Project settings
             - Default GCP resource location: asia-northeast2 (Osaka)
             - Environment Type: Production
+            - Public-facing name: Curuviho
             - </> ( Web )
                 - App nickname: Curuviho
                 - [v] Also set up Firebase Hosting for this app.
@@ -24,15 +34,17 @@
     - Build
         - Authentication
             - Sign-in method
+                - Email/Password: Enable
+                    - Email link (passwordless sign-in): Enable
                 - Google: Enable
+                - Identity Platform: Upgrade to enable
             - Templates
                 - Template language: Japanese
-        - Firebase database
+        - Firestore database
             - Location: asia-northeast2 (Osaka)
             - o Start in production mode
         - Storage
             - o Start in production mode
-        - App check
 
 I failed to put firestore into native mode.
 
@@ -95,10 +107,28 @@ https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
 ? Which port do you want to use for the Emulator UI (leave empty to use any available port)? 4040
 ? Would you like to download the emulators now? Yes
 
+echo NODE_ENV=test > functions/.env
 ```
 
 Create icons by <https://realfavicongenerator.net>.
 
-[Direct Workload Identity Federation](https://github.com/google-github-actions/auth)
+<https://www.google.com/recaptcha/admin/create>
 
-projects/913047262722/locations/global/workloadIdentityPools/github
+- Register a new site
+    - Label: curuviho.web.app
+    - Domains: curuviho.web.app
+    - Google Cloud Platform: curuviho
+
+Set site key to `webRecaptchaSiteKey` in `lib/env.dart`.
+
+<https://console.firebase.google.com/>
+
+- Projects: curuviho
+    - Build
+        - App check
+            - Apps
+                - Curuviho
+                    - reCAPTCHA
+                        - reCAPTCHA secret key: ********
+        - Firestore database
+            - add `service/deployment` with timestamp field `createdAt`

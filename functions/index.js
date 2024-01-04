@@ -1,25 +1,40 @@
 const {setGlobalOptions} = require("firebase-functions/v2");
+const {onCall} = require("firebase-functions/v2/https");
 const {
-//   onDocumentCreated,
-//   onDocumentUpdated,
+  onDocumentCreated,
+  onDocumentUpdated,
   onDocumentDeleted,
 } = require("firebase-functions/v2/firestore");
-const logger = require("firebase-functions/logger");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
+const {getAuth} = require("firebase-admin/auth");
+const {
+  createUser,
+  updateUser,
+} = require("./accounts");
 const {
   restoreTriggerDoc,
   upgradeData,
   setUiVersion,
-} = require("./upgrade");
+} = require("./deployment");
 const {setTestData} = require("./testUtils");
 
-setGlobalOptions({region: "asia-northeast1"});
+setGlobalOptions({region: "asia-northeast2"});
 
 initializeApp();
 
-exports.onDeletedUpgrade = onDocumentDeleted(
-    "service/upgrade",
+exports.onCreateAccount = onDocumentCreated(
+    "accounts/{account}",
+    (event) => createUser(getAuth(), event.data),
+);
+
+exports.onUpdateAccount = onDocumentUpdated(
+    "accounts/{account}",
+    (event) => updateUser(getAuth(), event.data),
+);
+
+exports.onDeletedDeployment = onDocumentDeleted(
+    "service/deployment",
     async (event) => {
       const db = getFirestore();
       await restoreTriggerDoc(event);
@@ -28,12 +43,11 @@ exports.onDeletedUpgrade = onDocumentDeleted(
     },
 );
 
-exports.onDeletedTest = onDocumentDeleted(
-    "service/test",
+exports.generateTestData = onCall(
     async (_) => {
-      logger.info(process.env.NODE_ENV);
       if (process.env.NODE_ENV !== "test") return;
-      await upgradeData(getFirestore());
-      await setTestData(getFirestore());
+      const db = getFirestore();
+      await upgradeData(db);
+      await setTestData(db);
     },
 );

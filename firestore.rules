@@ -1,7 +1,29 @@
 service cloud.firestore {
   match /databases/{database}/documents {
+    function getAccount() {
+      return get(/databases/$(database)/documents/accounts/$(request.auth.uid));
+    }
+    function isAdmin() {
+      return getAccount().data.user in get(/databases/$(database)/documents/groups/admin).data.users;
+    }
+    match /service/conf {
+      allow read: if true;
+      allow update: if isAdmin();
+    }
+    match /accounts/{account} {
+      allow read: if request.auth.uid == account;
+      allow read, write: if isAdmin();
+    }
+    match /users/{user} {
+      allow read: if getAccount() != null;
+      allow read, write: if isAdmin();
+    }
+    match /groups/{group} {
+      allow read: if getAccount() != null;
+      allow read, write: if isAdmin();
+    }
     match /{document=**} {
-      allow read, write: false;
+      allow read, write: if false;
     }
   }
 }
