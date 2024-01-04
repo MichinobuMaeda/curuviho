@@ -42,11 +42,14 @@ jobs:
           path: functions/node_modules
           key: ${{ runner.os }}-${{ hashFiles('functions/package-lock.json ') }}
       - if: steps.filter.outputs.functions == 'true'
-        name: Test and Deploy Functions
+        name: Test Functions
         run: |
           npm ci --prefix functions && \
           npm run lint --prefix functions && \
-          npm test --prefix functions && \
+          npm test --prefix functions
+      - if: steps.filter.outputs.functions == 'true'
+        name: Deploy Functions
+        run: |
           npx firebase deploy --only functions --force \
           -j $RUNNER_TEMP/service_account.json
       - if: steps.filter.outputs.firestore == 'true'
@@ -90,7 +93,7 @@ jobs:
           projectId: curuviho
       - name: Trigger system update job
         run: |
-          npx firebase firestore:delete service/upgrade --force \
+          npx firebase firestore:delete service/deployment --force \
           -j $RUNNER_TEMP/service_account.json
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
