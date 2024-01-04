@@ -9,6 +9,7 @@ name: Deploy to Firebase Hosting on merge
 jobs:
   build_and_deploy:
     env:
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/service_account.json
       PRIMARY_USER_EMAIL: ${{ secrets.PRIMARY_USER_EMAIL }}
     runs-on: ubuntu-latest
     steps:
@@ -16,7 +17,7 @@ jobs:
       - name: Create Service Account key
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }}' \
-          > $RUNNER_TEMP/service_account.json
+          > $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: Detect modified source
         uses: dorny/paths-filter@v2
@@ -52,18 +53,12 @@ jobs:
       - if: steps.filter.outputs.functions == 'true'
         name: Deploy Functions
         run: npx firebase deploy --only functions --force
-        env: 
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
       - if: steps.filter.outputs.firestore == 'true'
         name: Deploy Firestore
         run: npx firebase deploy --only firestore 
-        env: 
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
       - if: steps.filter.outputs.storage == 'true'
         name: Deploy Storage
         run: npx firebase deploy --only storage 
-        env: 
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
 
       - name: Set firebase api key
         run: |
@@ -95,8 +90,6 @@ jobs:
           projectId: curuviho
       - name: Trigger system update job
         run: npx firebase firestore:delete service/deployment --force 
-        env: 
-          GOOGLE_APPLICATION_CREDENTIALS: $RUNNER_TEMP/service_account.json
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
