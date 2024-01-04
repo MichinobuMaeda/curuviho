@@ -14,7 +14,6 @@ async function restoreTriggerDoc(event) {
 /**
  * Upgrade system on deployment.
  * @param {object} db Firestore
- * @param {object} auth Firestore
  */
 async function upgradeData(db) {
   const confRef = db.collection("service").doc("conf");
@@ -50,6 +49,7 @@ async function upgradeData(db) {
 
     if (!adminDoc.exists) {
       const accountDoc = await db.collection("accounts").add({
+        email: process.env.PRIMARY_USER_EMAIL,
         createdAt,
         updatedAt,
       });

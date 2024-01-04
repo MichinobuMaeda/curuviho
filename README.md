@@ -130,3 +130,10 @@ Set site key to `webRecaptchaSiteKey` in `lib/env.dart`.
                         - reCAPTCHA secret key: ********
         - Firestore database
             - add `service/deployment` with timestamp field `createdAt`
+
+<https://github.com/MichinobuMaeda/curuviho/settings/secrets/actions>
+
+Set secrets
+
+- PRIMARY_USER_EMAIL
+- FIREBASE_API_KEY_CURUVIHO

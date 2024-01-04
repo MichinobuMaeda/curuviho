@@ -17,7 +17,10 @@ const {
   upgradeData,
   setUiVersion,
 } = require("./deployment");
-const {setTestData} = require("./testUtils");
+const {
+  setTestEnv,
+  setTestData,
+} = require("./testUtils");
 
 setGlobalOptions({region: "asia-northeast2"});
 
@@ -47,6 +50,7 @@ exports.generateTestData = onCall(
     async (_) => {
       if (process.env.NODE_ENV !== "test") return;
       const db = getFirestore();
+      setTestEnv();
       await upgradeData(db);
       await setTestData(db);
     },

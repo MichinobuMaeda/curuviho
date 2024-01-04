@@ -7,6 +7,7 @@ const {
   setUiVersion,
 } = require("./deployment");
 const {
+  setTestEnv,
   stringToRegex,
 } = require("./testUtils");
 
@@ -41,6 +42,7 @@ describe("restoreTriggerDoc()", () => {
 describe("upgradeData()", () => {
   it("upgrades from data version: 0.", async () => {
     // Prepare
+    setTestEnv();
     const primaryUserId = "primaryUserId";
     const mockDocConf = functionsTest.firestore
         .makeDocumentSnapshot({}, "service/conf");
@@ -95,6 +97,7 @@ describe("upgradeData()", () => {
     ]);
     expect(collection.add.mock.calls[0]).toEqual([
       {
+        email: process.env.PRIMARY_USER_EMAIL,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -150,6 +153,7 @@ describe("upgradeData()", () => {
 
   it("don't upgrade from latest data version.", async () => {
     // Prepare
+    setTestEnv();
     const ts = new Date();
     const mockDocConfData = {
       uiVersion: "1.0.0+1",
