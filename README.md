@@ -106,8 +106,6 @@ https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
 ? Would you like to enable the Emulator UI? Yes
 ? Which port do you want to use for the Emulator UI (leave empty to use any available port)? 4040
 ? Would you like to download the emulators now? Yes
-
-echo NODE_ENV=test > functions/.env
 ```
 
 Create icons by <https://realfavicongenerator.net>.

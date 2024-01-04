@@ -12,7 +12,7 @@
     "test:ui": "flutter test --coverage",
     "test:data": "curl -X POST http://127.0.0.1:5001/curuviho/asia-northeast2/generateTestData -d '{\"data\":{}}' -H 'Content-Type: application/json'",
     "test": "npm run test:functions && npm run test:ui",
-    "start": "echo NODE_ENV=test > functions/.env && npx firebase emulators:exec --only auth,functions,firestore,storage --ui 'npm run test:data && fvm flutter run'"
+    "start": "npx firebase emulators:exec --only auth,functions,firestore,storage --ui 'npm run test:data && fvm flutter run'"
   },
   "author": "Michinobu Maeda",
   "license": "BSD-3-Clause",

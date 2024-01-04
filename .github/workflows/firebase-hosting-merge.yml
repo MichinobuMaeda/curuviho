@@ -45,7 +45,7 @@ jobs:
         name: Test and Deploy Functions
         run: |
           npm ci --prefix functions && \
-          npm run ling --prefix functions && \
+          npm run lint --prefix functions && \
           npm test --prefix functions && \
           npx firebase deploy --only functions --force \
           -j $RUNNER_TEMP/service_account.json
