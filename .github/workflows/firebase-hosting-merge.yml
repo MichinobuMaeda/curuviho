@@ -9,14 +9,14 @@ name: Deploy to Firebase Hosting on merge
 jobs:
   build_and_deploy:
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account.json
+      GOOGLE_APPLICATION_CREDENTIALS: $PWD/service-account.json
       PRIMARY_USER_EMAIL: ${{ secrets.PRIMARY_USER_EMAIL }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Create Service Account key
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }}' /
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CURUVIHO }}' \
           > $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: Detect modified source

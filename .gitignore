@@ -1,4 +1,5 @@
 # Project-specific
+service-*.json
 
 # Miscellaneous
 *.class
