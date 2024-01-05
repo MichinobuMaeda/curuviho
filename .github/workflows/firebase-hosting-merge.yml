@@ -9,7 +9,7 @@ name: Deploy to Firebase Hosting on merge
 jobs:
   build_and_deploy:
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: /tmp/service_account.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service_account.json
       PRIMARY_USER_EMAIL: ${{ secrets.PRIMARY_USER_EMAIL }}
     runs-on: ubuntu-latest
     steps:
