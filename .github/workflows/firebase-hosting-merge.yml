@@ -53,9 +53,14 @@ jobs:
       - if: steps.filter.outputs.functions == 'true'
         name: Deploy Functions
         run: npx firebase deploy --only functions --force
+
+      - if: steps.filter.outputs.firestore == 'true'
+        name: Test firestore rules
+        run: npm run test:firestore 
       - if: steps.filter.outputs.firestore == 'true'
         name: Deploy Firestore
         run: npx firebase deploy --only firestore 
+
       - if: steps.filter.outputs.storage == 'true'
         name: Deploy Storage
         run: npx firebase deploy --only storage 

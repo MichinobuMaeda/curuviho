@@ -1,22 +1,29 @@
 {
   "name": "curuviho",
   "version": "1.0.0",
-  "description": "## Create this project",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
+  "description": "Test tools",
   "scripts": {
     "test:functions": "npm test --prefix functions",
     "test:ui": "flutter test --coverage",
     "test:data": "curl -X POST http://127.0.0.1:5001/curuviho/asia-northeast2/generateTestData -d '{\"data\":{}}' -H 'Content-Type: application/json'",
     "test": "npm run test:functions && npm run test:ui",
+    "test:firestore": "npx firebase emulators:exec --only auth,functions,firestore 'npm run test:data && node test/firestore/test_rules.js'",
     "start": "npx firebase emulators:exec --only auth,functions,firestore,storage --ui 'npm run test:data && fvm flutter run'"
   },
   "author": "Michinobu Maeda",
   "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MichinobuMaeda/curuviho.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MichinobuMaeda/curuviho/issues"
+  },
+  "homepage": "https://github.com/MichinobuMaeda/curuviho#readme",
   "devDependencies": {
     "firebase-tools": "^12.7.0"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1"
   }
 }

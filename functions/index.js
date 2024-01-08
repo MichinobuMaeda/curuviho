@@ -50,8 +50,9 @@ exports.generateTestData = onCall(
     async (_) => {
       if (process.env.NODE_ENV !== "test") return;
       const db = getFirestore();
+      const auth = getAuth();
       setTestEnv();
       await upgradeData(db);
-      await setTestData(db);
+      await setTestData(db, auth);
     },
 );

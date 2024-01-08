@@ -44,24 +44,25 @@ async function upgradeData(db) {
   if (currentVersion === 0) {
     logger.info("upgrade data 0 to 1.");
 
-    const adminRef = db.collection("groups").doc("admin");
+    const adminRef = db.collection("groups").doc("admins");
     const adminDoc = await adminRef.get();
 
     if (!adminDoc.exists) {
-      const accountDoc = await db.collection("accounts").add({
-        email: process.env.PRIMARY_USER_EMAIL,
-        createdAt,
-        updatedAt,
-      });
-
       const userDoc = await db.collection("users").add({
-        accounts: [accountDoc.id],
         name: "Primary user",
         createdAt,
         updatedAt,
       });
 
+      await db.collection("accounts").add({
+        user: userDoc.id,
+        email: process.env.PRIMARY_USER_EMAIL,
+        createdAt,
+        updatedAt,
+      });
+
       await adminRef.set({
+        name: "Administrators",
         users: [userDoc.id],
         createdAt,
         updatedAt,

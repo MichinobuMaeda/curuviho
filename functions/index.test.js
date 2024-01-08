@@ -99,6 +99,9 @@ describe("generateTestData", () => {
     await functionsTest.wrap(index.generateTestData)();
 
     // Evaluate
+    expect(testUtils.setTestEnv.mock.calls).toEqual([
+      [],
+    ]);
     expect(upgrade.upgradeData.mock.calls).toEqual([
       [
         expect.any(firestore.Firestore),
@@ -107,6 +110,7 @@ describe("generateTestData", () => {
     expect(testUtils.setTestData.mock.calls).toEqual([
       [
         expect.any(firestore.Firestore),
+        expect.any(auth.Auth),
       ],
     ]);
   });
@@ -123,6 +127,8 @@ describe("generateTestData", () => {
     wrapped(mockDocTest);
 
     // Evaluate
+    expect(testUtils.setTestEnv.mock.calls).toEqual([
+    ]);
     expect(upgrade.upgradeData.mock.calls).toEqual([
     ]);
     expect(testUtils.setTestData.mock.calls).toEqual([

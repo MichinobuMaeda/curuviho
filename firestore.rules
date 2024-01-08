@@ -3,24 +3,31 @@ service cloud.firestore {
     function getAccount() {
       return get(/databases/$(database)/documents/accounts/$(request.auth.uid));
     }
+    function isActiveAccount() {
+      return getAccount().data.get('deletedAt', null) == null;
+    }
     function isAdmin() {
-      return getAccount().data.user in get(/databases/$(database)/documents/groups/admin).data.users;
+      return isActiveAccount() && getAccount().data.user in get(/databases/$(database)/documents/groups/admins).data.users;
     }
-    match /service/conf {
-      allow read: if true;
-      allow update: if isAdmin();
+    match /service/{doc} {
+      allow read: if doc == "conf";
+      allow read, update: if isAdmin();
     }
-    match /accounts/{account} {
-      allow read: if request.auth.uid == account;
-      allow read, write: if isAdmin();
+    match /accounts/{doc} {
+      allow read, update: if request.auth.uid == doc;
+      allow read, create, update: if isAdmin();
+      allow delete: if request.auth.uid != doc && isAdmin();
     }
-    match /users/{user} {
-      allow read: if getAccount() != null;
-      allow read, write: if isAdmin();
+    match /users/{doc} {
+      allow read: if isActiveAccount();
+      allow read, update: if isActiveAccount() && getAccount().data.user == doc;
+      allow read, create, update: if isAdmin();
+      allow delete: if getAccount().data.user != doc && isAdmin();
     }
-    match /groups/{group} {
-      allow read: if getAccount() != null;
-      allow read, write: if isAdmin();
+    match /groups/{doc} {
+      allow read: if isActiveAccount();
+      allow read, update: if doc == "admins" && isAdmin();
+      allow read, write: if doc != "admins" && isAdmin();
     }
     match /{document=**} {
       allow read, write: if false;

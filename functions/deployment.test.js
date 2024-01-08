@@ -86,29 +86,18 @@ describe("upgradeData()", () => {
       "groups",
     ]);
     expect(collection.doc.mock.calls[1]).toEqual([
-      "admin",
+      "admins",
     ]);
     expect(mockDocAdmin.ref.get.mock.calls).toEqual([
       [],
     ]);
 
     expect(db.collection.mock.calls[2]).toEqual([
-      "accounts",
+      "users",
     ]);
     expect(collection.add.mock.calls[0]).toEqual([
       {
-        email: process.env.PRIMARY_USER_EMAIL,
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
-      },
-    ]);
-    expect(db.collection.mock.calls[3]).toEqual([
-      "users",
-    ]);
-    expect(collection.add.mock.calls[1]).toEqual([
-      {
         name: "Primary user",
-        accounts: ["primaryUserId"],
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -121,8 +110,20 @@ describe("upgradeData()", () => {
         updatedAt: expect.any(Date),
       },
     ]);
+    expect(db.collection.mock.calls[3]).toEqual([
+      "accounts",
+    ]);
+    expect(collection.add.mock.calls[1]).toEqual([
+      {
+        user: expect.any(String),
+        email: process.env.PRIMARY_USER_EMAIL,
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+      },
+    ]);
     expect(mockDocAdmin.ref.set.mock.calls[0]).toEqual([
       {
+        name: "Administrators",
         users: [primaryUserId],
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),

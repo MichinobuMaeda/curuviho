@@ -137,3 +137,12 @@ Set secrets
 
 - PRIMARY_USER_EMAIL
 - FIREBASE_API_KEY_CURUVIHO
+
+<https://console.cloud.google.com/>
+
+- Select a project: curuviho
+    - IAM & Admin
+        - github-action-**@curuviho.iam.gserviceaccount.com
+            - Add
+                - Firebase Admin SDK Administrator Service Agent
+                - Storage Admin
