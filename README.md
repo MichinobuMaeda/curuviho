@@ -144,5 +144,8 @@ Set secrets
     - IAM & Admin
         - github-action-**@curuviho.iam.gserviceaccount.com
             - Add
+                - Cloud Functions Admin
                 - Firebase Admin SDK Administrator Service Agent
+                - Firebase Rules Admin
+                - Service Account User
                 - Storage Admin

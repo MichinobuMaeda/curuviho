@@ -10,7 +10,6 @@ jobs:
   build_and_deploy:
     env:
       GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account.json
-      PRIMARY_USER_EMAIL: ${{ secrets.PRIMARY_USER_EMAIL }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -50,6 +49,9 @@ jobs:
           npm ci --prefix functions && \
           npm run lint --prefix functions && \
           npm test --prefix functions
+      - if: steps.filter.outputs.functions == 'true'
+        name: Set email of primary user
+        run: echo PRIMARY_USER_EMAIL=${{ secrets.PRIMARY_USER_EMAIL }} >> functions/.env
       - if: steps.filter.outputs.functions == 'true'
         name: Deploy Functions
         run: npx firebase deploy --only functions --force

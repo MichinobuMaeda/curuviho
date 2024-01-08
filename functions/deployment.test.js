@@ -7,7 +7,6 @@ const {
   setUiVersion,
 } = require("./deployment");
 const {
-  setTestEnv,
   stringToRegex,
 } = require("./testUtils");
 
@@ -42,7 +41,6 @@ describe("restoreTriggerDoc()", () => {
 describe("upgradeData()", () => {
   it("upgrades from data version: 0.", async () => {
     // Prepare
-    setTestEnv();
     const primaryUserId = "primaryUserId";
     const mockDocConf = functionsTest.firestore
         .makeDocumentSnapshot({}, "service/conf");
@@ -154,7 +152,6 @@ describe("upgradeData()", () => {
 
   it("don't upgrade from latest data version.", async () => {
     // Prepare
-    setTestEnv();
     const ts = new Date();
     const mockDocConfData = {
       uiVersion: "1.0.0+1",

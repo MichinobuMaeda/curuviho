@@ -6,10 +6,6 @@ const sleep = (ms) => {
 
 const stringToRegex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&");
 
-const setTestEnv = async () => {
-  process.env.PRIMARY_USER_EMAIL = "primary@example.com";
-};
-
 const setTestData = async (db, auth) => {
   const ts = new Date();
   const createdAt = ts;
@@ -75,7 +71,6 @@ const setTestData = async (db, auth) => {
 };
 
 module.exports = {
-  setTestEnv,
   stringToRegex,
   setTestData,
 };
