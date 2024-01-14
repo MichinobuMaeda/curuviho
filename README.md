@@ -1,5 +1,27 @@
 # Curuviho
 
+[![codecov](https://codecov.io/gh/MichinobuMaeda/curuviho/graph/badge.svg?token=w9Bhc4DLDJ)](https://codecov.io/gh/MichinobuMaeda/curuviho)
+
+## Prerequisites
+
+- nvm
+- fvm
+- Java >= 11
+- curl
+
+## Development
+
+```bash
+git clone git@github.com:MichinobuMaeda/curuviho.git
+cd curuviho
+npm i
+npm i --prefix functions
+flutter pug get
+npm test
+npm start
+dart run build_runner watch
+```
+
 ## Data structure
 
 ```mermaid

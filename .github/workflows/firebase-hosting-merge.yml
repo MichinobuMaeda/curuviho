@@ -70,11 +70,11 @@ jobs:
       - name: Set firebase api key
         run: |
           sed 's/FIREBASE_API_KEY/${{ secrets.FIREBASE_API_KEY_CURUVIHO }}/' \
-            -i lib/env.dart
+            -i lib/config.dart
       - name: Set UI version
         run: |
           VERSION=`grep 'version:' pubspec.yaml | sed 's/.*\s//'` && \
-            sed "s/for\ test/$VERSION/" -i lib/env.dart  && \
+            sed "s/for\ test/$VERSION/" -i lib/config.dart  && \
             echo "{\"version\":\"$VERSION\"}" > web/version.json && \
             echo $VERSION
       - uses: kuhnroyal/flutter-fvm-config-action@v2
