@@ -1,33 +1,40 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    function getAccount() {
-      return get(/databases/$(database)/documents/accounts/$(request.auth.uid));
+    function getAccount(org) {
+      return get(/databases/$(database)/documents/orgs/$(org)/accounts/$(request.auth.uid));
     }
-    function isActiveAccount() {
-      return getAccount().data.get('deletedAt', null) == null;
+    function isActiveAccount(org) {
+      return getAccount(org).data.get('deletedAt', null) == null;
     }
     function isAdmin() {
-      return isActiveAccount() && getAccount().data.user in get(/databases/$(database)/documents/groups/admins).data.users;
+      return request.auth.uid in get(/databases/$(database)/documents/service/admins).data.accounts;
+    }
+    function isManager(org) {
+      return isActiveAccount(org) && getAccount(org).data.user in get(/databases/$(database)/documents/orgs/$(org)/groups/managers).data.users;
     }
     match /service/{doc} {
       allow read: if doc == "conf";
       allow read, update: if isAdmin();
     }
-    match /accounts/{doc} {
+    match /orgs/{doc} {
+      allow read: if true;
+      allow read, write: if isAdmin();
+    }
+    match /orgs/{org}/accounts/{doc} {
       allow read, update: if request.auth.uid == doc;
-      allow read, create, update: if isAdmin();
-      allow delete: if request.auth.uid != doc && isAdmin();
+      allow read, create, update: if isManager(org);
+      allow delete: if request.auth.uid != doc && isManager(org);
     }
-    match /users/{doc} {
-      allow read: if isActiveAccount();
-      allow read, update: if isActiveAccount() && getAccount().data.user == doc;
-      allow read, create, update: if isAdmin();
-      allow delete: if getAccount().data.user != doc && isAdmin();
+    match /orgs/{org}/users/{doc} {
+      allow read: if isActiveAccount(org);
+      allow read, update: if isActiveAccount(org) && getAccount(org).data.user == doc;
+      allow read, create, update: if isManager(org);
+      allow delete: if getAccount(org).data.user != doc && isManager(org);
     }
-    match /groups/{doc} {
-      allow read: if isActiveAccount();
-      allow read, update: if doc == "admins" && isAdmin();
-      allow read, write: if doc != "admins" && isAdmin();
+    match /orgs/{org}/groups/{doc} {
+      allow read: if isActiveAccount(org);
+      allow read, update: if doc == "managers" && isManager(org);
+      allow read, write: if doc != "managers" && isManager(org);
     }
     match /{document=**} {
       allow read, write: if false;

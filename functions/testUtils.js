@@ -11,39 +11,31 @@ const setTestData = async (db, auth) => {
   const createdAt = ts;
   const updatedAt = ts;
 
+  const testRef = db.collection("orgs").doc("test");
+
   await db.collection("service").doc("conf").update({
     uiVersion: "for test",
     updatedAt: new Date(),
   });
 
   const priUid = (
-    await db.collection("accounts").where(
-        "user",
-        "==",
-        (
-          await db.collection("users").doc(
-              (
-                await db.collection("groups").doc("admins").get()
-              ).data().users[0],
-          ).get()
-        ).id,
-    ).get()
-  ).docs[0].id;
+    await db.collection("service").doc("admins").get()
+  ).data().accounts[0];
 
-  const user01Doc = await db.collection("users").add({
+  const user01Doc = await testRef.collection("users").add({
     name: "User 01",
-    createdAt,
-    updatedAt,
-  });
-
-  const account01Doc = await db.collection("accounts").add({
-    user: user01Doc.id,
     email: "user01@example.com",
     createdAt,
     updatedAt,
   });
 
-  await db.collection("groups").doc("group01").set({
+  const account01Doc = await testRef.collection("accounts").add({
+    user: user01Doc.id,
+    createdAt,
+    updatedAt,
+  });
+
+  await testRef.collection("groups").doc("group01").set({
     users: [user01Doc.id],
     createdAt,
     updatedAt,
@@ -58,16 +50,15 @@ const setTestData = async (db, auth) => {
       },
   );
 
-  console.info(`Set password to primary account: ${priUid}`);
+  console.info(`Create account 01`);
 
-  await auth.updateUser(
-      account01Doc.id,
+  await auth.createUser(
       {
+        uid: account01Doc.id,
+        email: "user01@example.com",
         password: "password",
       },
   );
-
-  console.info(`Set password to user01 account: ${account01Doc.id}`);
 };
 
 module.exports = {

@@ -52,50 +52,62 @@ const { Expect } = require("./expect");
   await expect.denied(
     "to delete service/conf",
     deleteDoc(doc(db, "service", "conf")),
+  );  
+  await expect.denied(
+    "to read service/admins",
+    getDoc(doc(db, "service", "admins")),
   );
   await expect.denied(
-    "to read accounts",
-    getDocs(collection(db, "accounts")),
+    "to update service/admins",
+    updateDoc(doc(db, "service", "admins"), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to add doc to accounts",
-    addDoc(collection(db, "accounts"), { name: "new account" }),
+    "to delete service/admins",
+    deleteDoc(doc(db, "service", "admins")),
   );
   await expect.denied(
-    "to read users",
-    getDocs(collection(db, "users")),
+    "to read orgs/test/accounts",
+    getDocs(collection(db, "orgs", "test", "accounts")),
   );
   await expect.denied(
-    "to add doc to users",
-    addDoc(collection(db, "users"), { name: "new user" }),
+    "to add doc to orgs/test/accounts",
+    addDoc(collection(db, "orgs", "test", "accounts"), { name: "new account" }),
   );
   await expect.denied(
-    "to read groups/admins",
-    getDoc(doc(db, "groups", "admins")),
+    "to read orgs/test/users",
+    getDocs(collection(db, "orgs", "test", "users")),
   );
   await expect.denied(
-    "to update groups/admins",
-    updateDoc(doc(db, "groups", "admins"), { updatedAt: new Date() }),
+    "to add doc to orgs/test/users",
+    addDoc(collection(db, "orgs", "test", "users"), { name: "new user" }),
   );
   await expect.denied(
-    "to delete groups/admins",
-    deleteDoc(doc(db, "groups", "admins")),
+    "to read orgs/test/groups/managers",
+    getDoc(doc(db, "orgs", "test", "groups", "managers")),
   );
   await expect.denied(
-    "to read groups/group01",
-    getDoc(doc(db, "groups", "group01")),
+    "to update orgs/test/groups/managers",
+    updateDoc(doc(db, "orgs", "test", "groups", "managers"), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to update groups/group01",
-    updateDoc(doc(db, "groups", "group01"), { updatedAt: new Date() }),
+    "to delete orgs/test/groups/managers",
+    deleteDoc(doc(db, "orgs", "test", "groups", "managers")),
   );
   await expect.denied(
-    "to delete groups/group01",
-    deleteDoc(doc(db, "groups", "group01")),
+    "to read orgs/test/groups/group01",
+    getDoc(doc(db, "orgs", "test", "groups", "group01")),
   );
   await expect.denied(
-    "to add doc to groups",
-    addDoc(collection(db, "groups"), { name: "new group" }),
+    "to update orgs/test/groups/group01",
+    updateDoc(doc(db, "orgs", "test", "groups", "group01"), { updatedAt: new Date() }),
+  );
+  await expect.denied(
+    "to delete orgs/test/groups/group01",
+    deleteDoc(doc(db, "orgs", "test", "groups", "group01")),
+  );
+  await expect.denied(
+    "to add doc to orgs/test/groups",
+    addDoc(collection(db, "orgs", "test", "groups"), { name: "new group" }),
   );
 
   await signInWithEmailAndPassword(auth, "user01@example.com", "password");  
@@ -116,69 +128,81 @@ const { Expect } = require("./expect");
     deleteDoc(doc(db, "service", "conf")),
   );
   await expect.denied(
-    "to read accounts",
-    getDocs(collection(db, "accounts")),
+    "to read service/admins",
+    getDoc(doc(db, "service", "admins")),
   );
   await expect.denied(
-    "to add doc to accounts",
-    addDoc(collection(db, "accounts"), { name: "new account" }),
+    "to update service/admins",
+    updateDoc(doc(db, "service", "admins"), { updatedAt: new Date() }),
+  );
+  await expect.denied(
+    "to delete service/admins",
+    deleteDoc(doc(db, "service", "admins")),
+  );
+  await expect.denied(
+    "to read orgs/test/accounts",
+    getDocs(collection(db, "orgs", "test", "accounts")),
+  );
+  await expect.denied(
+    "to add doc to orgs/test/accounts",
+    addDoc(collection(db, "orgs", "test", "accounts"), { name: "new account" }),
   );
   await expect.allowed(
-    "to read accounts/uid",
-    getDoc(doc(db, "accounts", uid)),
+    "to read orgs/test/accounts/uid",
+    getDoc(doc(db, "orgs", "test", "accounts", uid)),
   );
-  const user01 = (await getDoc(doc(db, "accounts", uid))).data().user;
+  const user01 = (await getDoc(doc(db, "orgs", "test", "accounts", uid))).data().user;
   await expect.allowed(
-    "to update accounts/uid",
-    updateDoc(doc(db, "accounts", uid), { updatedAt: new Date() }),
+    "to update orgs/test/accounts/uid",
+    updateDoc(doc(db, "orgs", "test", "accounts", uid), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to delete accounts/uid",
-    deleteDoc(doc(db, "accounts", uid)),
-  );
-  await expect.allowed(
-    "to read users",
-    getDocs(collection(db, "users")),
-  );
-  await expect.denied(
-    "to add doc to users",
-    addDoc(collection(db, "users"), { name: "new user" }),
+    "to delete orgs/test/accounts/uid",
+    deleteDoc(doc(db, "orgs", "test", "accounts", uid)),
   );
   await expect.allowed(
-    "to update users/user01",
-    updateDoc(doc(db, "users", user01), { updatedAt: new Date() }),
+    "to read orgs/test/users",
+    getDocs(collection(db, "orgs", "test", "users")),
   );
   await expect.denied(
-    "to delete users/user01",
-    deleteDoc(doc(db, "users", user01)),
+    "to add doc to orgs/test/users",
+    addDoc(collection(db, "orgs", "test", "users"), { name: "new user" }),
   );
   await expect.allowed(
-    "to read groups/admins",
-    getDoc(doc(db, "groups", "admins")),
+    "to update orgs/test/users/user01",
+    updateDoc(doc(db, "orgs", "test", "users", user01), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to update groups/admins",
-    updateDoc(doc(db, "groups", "admins"), { updatedAt: new Date() }),
-  );
-  await expect.denied(
-    "to delete groups/admins",
-    deleteDoc(doc(db, "groups", "admins")),
+    "to delete orgs/test/users/user01",
+    deleteDoc(doc(db, "orgs", "test", "users", user01)),
   );
   await expect.allowed(
-    "to read groups/group01",
-    getDoc(doc(db, "groups", "group01")),
+    "to read orgs/test/groups/managers",
+    getDoc(doc(db, "orgs", "test", "groups", "managers")),
   );
   await expect.denied(
-    "to update groups/group01",
-    updateDoc(doc(db, "groups", "group01"), { updatedAt: new Date() }),
+    "to update orgs/test/groups/managers",
+    updateDoc(doc(db, "orgs", "test", "groups", "managers"), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to delete groups/group01",
-    deleteDoc(doc(db, "groups", "group01")),
+    "to delete orgs/test/groups/managers",
+    deleteDoc(doc(db, "orgs", "test", "groups", "managers")),
+  );
+  await expect.allowed(
+    "to read orgs/test/groups/group01",
+    getDoc(doc(db, "orgs", "test", "groups", "group01")),
   );
   await expect.denied(
-    "to add doc to groups",
-    addDoc(collection(db, "groups"), { name: "new group" }),
+    "to update orgs/test/groups/group01",
+    updateDoc(doc(db, "orgs", "test", "groups", "group01"), { updatedAt: new Date() }),
+  );
+  await expect.denied(
+    "to delete orgs/test/groups/group01",
+    deleteDoc(doc(db, "orgs", "test", "groups", "group01")),
+  );
+  await expect.denied(
+    "to add doc to orgs/test/groups",
+    addDoc(collection(db, "orgs", "test", "groups"), { name: "new group" }),
   );
 
   await signOut(auth);  
@@ -203,81 +227,93 @@ const { Expect } = require("./expect");
     deleteDoc(doc(db, "service", "conf")),
   );
   await expect.allowed(
-    "to read accounts",
-    getDocs(collection(db, "accounts")),
+    "to read service/admins",
+    getDoc(doc(db, "service", "admins")),
   );
   await expect.allowed(
-    "to update accounts/uid",
-    updateDoc(doc(db, "accounts", uid), { updatedAt: new Date() }),
+    "to update service/admins",
+    updateDoc(doc(db, "service", "admins"), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to delete accounts/uid",
-    deleteDoc(doc(db, "accounts", uid)),
+    "to delete service/admins",
+    deleteDoc(doc(db, "service", "admins")),
   );
   await expect.allowed(
-    "to update accounts/user01",
-    updateDoc(doc(db, "accounts", account01), { updatedAt: new Date() }),
+    "to read orgs/test/accounts",
+    getDocs(collection(db, "orgs", "test", "accounts")),
   );
   await expect.allowed(
-    "to delete accounts/user01",
-    deleteDoc(doc(db, "accounts", account01)),
-  );
-  await expect.allowed(
-    "to add doc to accounts",
-    addDoc(collection(db, "accounts"), { name: "new account" }),
-  );
-  await expect.allowed(
-    "to read users",
-    getDocs(collection(db, "users")),
-  );
-  await expect.allowed(
-    "to add doc to users",
-    addDoc(collection(db, "users"), { name: "new user" }),
-  );
-  const admin = (await getDoc(doc(db, "accounts", uid))).data().user;
-  await expect.allowed(
-    "to update users/user01",
-    updateDoc(doc(db, "users", user01), { updatedAt: new Date() }),
-  );
-  await expect.allowed(
-    "to delete users/user01",
-    deleteDoc(doc(db, "users", user01)),
-  );
-  await expect.allowed(
-    "to update users/admin",
-    updateDoc(doc(db, "users", admin), { updatedAt: new Date() }),
+    "to update orgs/test/accounts/uid",
+    updateDoc(doc(db, "orgs", "test", "accounts", uid), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to delete users/admin",
-    deleteDoc(doc(db, "users", admin)),
+    "to delete orgs/test/accounts/uid",
+    deleteDoc(doc(db, "orgs", "test", "accounts", uid)),
   );
   await expect.allowed(
-    "to read groups/admins",
-    getDoc(doc(db, "groups", "admins")),
+    "to update orgs/test/accounts/user01",
+    updateDoc(doc(db, "orgs", "test", "accounts", account01), { updatedAt: new Date() }),
   );
   await expect.allowed(
-    "to update groups/admins",
-    updateDoc(doc(db, "groups", "admins"), { updatedAt: new Date() }),
+    "to delete orgs/test/accounts/user01",
+    deleteDoc(doc(db, "orgs", "test", "accounts", account01)),
+  );
+  await expect.allowed(
+    "to add doc to orgs/test/accounts",
+    addDoc(collection(db, "orgs", "test", "accounts"), { name: "new account" }),
+  );
+  await expect.allowed(
+    "to read orgs/test/users",
+    getDocs(collection(db, "orgs", "test", "users")),
+  );
+  await expect.allowed(
+    "to add doc to orgs/test/users",
+    addDoc(collection(db, "orgs", "test", "users"), { name: "new user" }),
+  );
+  const admin = (await getDoc(doc(db, "orgs", "test", "accounts", uid))).data().user;
+  await expect.allowed(
+    "to update orgs/test/users/user01",
+    updateDoc(doc(db, "orgs", "test", "users", user01), { updatedAt: new Date() }),
+  );
+  await expect.allowed(
+    "to delete orgs/test/users/user01",
+    deleteDoc(doc(db, "orgs", "test", "users", user01)),
+  );
+  await expect.allowed(
+    "to update orgs/test/users/admin",
+    updateDoc(doc(db, "orgs", "test", "users", admin), { updatedAt: new Date() }),
   );
   await expect.denied(
-    "to delete groups/admins",
-    deleteDoc(doc(db, "groups", "admins")),
+    "to delete orgs/test/users/admin",
+    deleteDoc(doc(db, "orgs", "test", "users", admin)),
   );
   await expect.allowed(
-    "to read groups/group01",
-    getDoc(doc(db, "groups", "group01")),
+    "to read orgs/test/groups/managers",
+    getDoc(doc(db, "orgs", "test", "groups", "managers")),
   );
   await expect.allowed(
-    "to update groups/group01",
-    updateDoc(doc(db, "groups", "group01"), { updatedAt: new Date() }),
+    "to update orgs/test/groups/managers",
+    updateDoc(doc(db, "orgs", "test", "groups", "managers"), { updatedAt: new Date() }),
+  );
+  await expect.denied(
+    "to delete orgs/test/groups/managers",
+    deleteDoc(doc(db, "orgs", "test", "groups", "managers")),
   );
   await expect.allowed(
-    "to delete groups/group01",
-    deleteDoc(doc(db, "groups", "group01")),
+    "to read orgs/test/groups/group01",
+    getDoc(doc(db, "orgs", "test", "groups", "group01")),
   );
   await expect.allowed(
-    "to add doc to groups",
-    addDoc(collection(db, "groups"), { name: "new group" }),
+    "to update orgs/test/groups/group01",
+    updateDoc(doc(db, "orgs", "test", "groups", "group01"), { updatedAt: new Date() }),
+  );
+  await expect.allowed(
+    "to delete orgs/test/groups/group01",
+    deleteDoc(doc(db, "orgs", "test", "groups", "group01")),
+  );
+  await expect.allowed(
+    "to add doc to orgs/test/groups",
+    addDoc(collection(db, "orgs", "test", "groups"), { name: "new group" }),
   );
 
   await signOut(auth);  

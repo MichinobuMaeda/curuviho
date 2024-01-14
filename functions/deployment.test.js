@@ -42,25 +42,48 @@ describe("upgradeData()", () => {
   it("upgrades from data version: 0.", async () => {
     // Prepare
     const primaryUserId = "primaryUserId";
+    const userDocId = "userDocId";
     const mockDocConf = functionsTest.firestore
         .makeDocumentSnapshot({}, "service/conf");
     const mockDocAdmin = functionsTest.firestore
-        .makeDocumentSnapshot({}, "groups/admin");
+        .makeDocumentSnapshot({}, "service/admin");
+    const mockDocAccount = functionsTest.firestore
+        .makeDocumentSnapshot({}, `org/test/accounts/${primaryUserId}`);
+    const mockDocManagers = functionsTest.firestore
+        .makeDocumentSnapshot({}, "org/test/groups/managers");
     mockDocConf.ref.get = jest.fn(() => Promise.resolve({exists: false}));
-    mockDocConf.ref.set= jest.fn(() => Promise.resolve({}));
-    mockDocConf.ref.update= jest.fn(() => Promise.resolve({}));
+    mockDocConf.ref.set = jest.fn(() => Promise.resolve({}));
+    mockDocConf.ref.update = jest.fn(() => Promise.resolve({}));
     mockDocAdmin.ref.get = jest.fn(() => Promise.resolve({exists: false}));
-    mockDocAdmin.ref.set= jest.fn(() => Promise.resolve({}));
+    mockDocAdmin.ref.set = jest.fn(() => Promise.resolve({}));
+    mockDocAccount.ref.set = jest.fn(() => Promise.resolve({}));
+    mockDocManagers.ref.set = jest.fn(() => Promise.resolve({}));
+    const mockTestRef = {
+      collection: jest.fn(() => collection),
+      set: jest.fn(() => Promise.resolve({})),
+    };
     const collection = {
-      add: jest.fn(() => ({id: primaryUserId})),
-      doc: jest.fn((id) => id === "conf" ? mockDocConf.ref : mockDocAdmin.ref),
+      add: jest.fn(() => Promise.resolve({id: userDocId})),
+      set: jest.fn(),
+      doc: jest.fn((id) => id === "conf" ?
+        mockDocConf.ref :
+        id === "test" ?
+          mockTestRef :
+          id == primaryUserId ?
+            mockDocAccount.ref :
+            id == "managers" ?
+              mockDocManagers.ref :
+              mockDocAdmin.ref),
     };
     const db = {
       collection: jest.fn(() => collection),
     };
+    const auth = {
+      createUser: jest.fn(() => ({uid: primaryUserId})),
+    };
 
     // Run
-    await upgradeData(db);
+    await upgradeData(db, auth);
 
     // Evaluate
     expect(db.collection.mock.calls[0]).toEqual([
@@ -81,48 +104,60 @@ describe("upgradeData()", () => {
     ]);
 
     expect(db.collection.mock.calls[1]).toEqual([
-      "groups",
+      "orgs",
     ]);
     expect(collection.doc.mock.calls[1]).toEqual([
-      "admins",
+      "test",
     ]);
-    expect(mockDocAdmin.ref.get.mock.calls).toEqual([
-      [],
+
+    expect(auth.createUser.mock.calls[0]).toEqual([
+      {
+        email: process.env.PRIMARY_USER_EMAIL,
+      },
     ]);
 
     expect(db.collection.mock.calls[2]).toEqual([
+      "service",
+    ]);
+    expect(collection.doc.mock.calls[2]).toEqual([
+      "admins",
+    ]);
+
+    expect(mockTestRef.collection.mock.calls[0]).toEqual([
       "users",
     ]);
     expect(collection.add.mock.calls[0]).toEqual([
       {
         name: "Primary user",
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
-      },
-    ]);
-    expect(mockDocConf.ref.set.mock.calls[0]).toEqual([
-      {
-        uiVersion: "",
-        dataVersion: 0,
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
-      },
-    ]);
-    expect(db.collection.mock.calls[3]).toEqual([
-      "accounts",
-    ]);
-    expect(collection.add.mock.calls[1]).toEqual([
-      {
-        user: expect.any(String),
         email: process.env.PRIMARY_USER_EMAIL,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
     ]);
-    expect(mockDocAdmin.ref.set.mock.calls[0]).toEqual([
+
+    expect(mockTestRef.collection.mock.calls[1]).toEqual([
+      "accounts",
+    ]);
+    expect(collection.doc.mock.calls[3]).toEqual([
+      primaryUserId,
+    ]);
+    expect(mockDocAccount.ref.set.mock.calls[0]).toEqual([
       {
-        name: "Administrators",
-        users: [primaryUserId],
+        user: expect.any(String),
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+      },
+    ]);
+    expect(mockTestRef.collection.mock.calls[2]).toEqual([
+      "groups",
+    ]);
+    expect(collection.doc.mock.calls[4]).toEqual([
+      "managers",
+    ]);
+    expect(mockDocManagers.ref.set.mock.calls[0]).toEqual([
+      {
+        name: "Managers",
+        users: [userDocId],
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -139,14 +174,16 @@ describe("upgradeData()", () => {
       },
     ]);
 
-    expect(db.collection.mock.calls.length).toEqual(4);
-    expect(collection.doc.mock.calls.length).toEqual(2);
-    expect(collection.add.mock.calls.length).toEqual(2);
+    expect(db.collection.mock.calls.length).toEqual(3);
+    expect(collection.doc.mock.calls.length).toEqual(5);
+    expect(collection.add.mock.calls.length).toEqual(1);
     expect(mockDocConf.ref.get.mock.calls.length).toEqual(1);
     expect(mockDocConf.ref.set.mock.calls.length).toEqual(1);
     expect(mockDocConf.ref.update.mock.calls.length).toEqual(1);
-    expect(mockDocAdmin.ref.get.mock.calls.length).toEqual(1);
-    expect(mockDocAdmin.ref.set.mock.calls.length).toEqual(1);
+    expect(mockDocAdmin.ref.get.mock.calls.length).toEqual(0);
+    expect(mockDocAccount.ref.set.mock.calls.length).toEqual(1);
+    expect(mockDocManagers.ref.set.mock.calls.length).toEqual(1);
+    expect(auth.createUser.mock.calls.length).toEqual(1);
     expect(logger.info.mock.calls.length).toEqual(3);
   });
 

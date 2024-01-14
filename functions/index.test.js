@@ -1,65 +1,16 @@
 const functionsTest = require("firebase-functions-test")();
 const auth = require("firebase-admin/auth");
 const firestore = require("firebase-admin/firestore");
-const accounts = require("./accounts");
 const upgrade = require("./deployment");
 const index = require("./index");
 const testUtils = require("./testUtils");
 
 jest.mock("firebase-functions/logger");
-jest.mock("./accounts");
 jest.mock("./deployment");
 jest.mock("./testUtils");
 
 afterEach(() => {
   jest.clearAllMocks();
-});
-
-describe("onCreateAccount", () => {
-  it("calls createUser()", async () => {
-    // Prepare
-    const mockDocAccount = functionsTest.firestore
-        .makeDocumentSnapshot({email: "user@example.com"}, "accounts/user01");
-
-    // Run
-    await functionsTest.wrap(index.onCreateAccount)(mockDocAccount);
-
-    // Evaluate
-    expect(accounts.createUser.mock.calls).toEqual([
-      [
-        expect.any(auth.Auth),
-        expect.any(firestore.DocumentSnapshot),
-      ],
-    ]);
-  });
-});
-
-describe("onUpdateAccount", () => {
-  it("calls updateUser()", async () => {
-    // Prepare
-    const mockChange = functionsTest.makeChange(
-        functionsTest.firestore.makeDocumentSnapshot({
-          displayName: "old Name",
-        }, "accounts/user01"),
-        functionsTest.firestore.makeDocumentSnapshot({
-          displayName: "new name",
-        }, "accounts/user01"),
-    );
-
-    // Run
-    await functionsTest.wrap(index.onUpdateAccount)(mockChange);
-
-    // Evaluate
-    expect(accounts.updateUser.mock.calls).toEqual([
-      [
-        expect.any(auth.Auth),
-        expect.objectContaining({
-          before: expect.any(firestore.DocumentSnapshot),
-          after: expect.any(firestore.DocumentSnapshot),
-        }),
-      ],
-    ]);
-  });
 });
 
 describe("onDeletedDeployment", () => {
@@ -80,6 +31,7 @@ describe("onDeletedDeployment", () => {
     expect(upgrade.upgradeData.mock.calls).toEqual([
       [
         expect.any(firestore.Firestore),
+        expect.any(auth.Auth),
       ],
     ]);
     expect(upgrade.setUiVersion.mock.calls).toEqual([
@@ -102,6 +54,7 @@ describe("generateTestData", () => {
     expect(upgrade.upgradeData.mock.calls).toEqual([
       [
         expect.any(firestore.Firestore),
+        expect.any(auth.Auth),
       ],
     ]);
     expect(testUtils.setTestData.mock.calls).toEqual([

@@ -14,8 +14,9 @@ async function restoreTriggerDoc(event) {
 /**
  * Upgrade system on deployment.
  * @param {object} db Firestore
+ * @param {object} auth FirebaseAuth
  */
-async function upgradeData(db) {
+async function upgradeData(db, auth) {
   const confRef = db.collection("service").doc("conf");
   const confDoc = await confRef.get();
   const currentVersion = confDoc.exists ? confDoc.data().dataVersion : 0;
@@ -44,30 +45,45 @@ async function upgradeData(db) {
   if (currentVersion === 0) {
     logger.info("upgrade data 0 to 1.");
 
-    const adminRef = db.collection("groups").doc("admins");
-    const adminDoc = await adminRef.get();
+    const testRef = db.collection("orgs").doc("test");
 
-    if (!adminDoc.exists) {
-      const userDoc = await db.collection("users").add({
-        name: "Primary user",
-        createdAt,
-        updatedAt,
-      });
+    const user = await auth.createUser({
+      email: process.env.PRIMARY_USER_EMAIL,
+    });
 
-      await db.collection("accounts").add({
-        user: userDoc.id,
-        email: process.env.PRIMARY_USER_EMAIL,
-        createdAt,
-        updatedAt,
-      });
+    await db.collection("service").doc("admins").set({
+      name: "Administrators",
+      accounts: [user.uid],
+      createdAt,
+      updatedAt,
+    });
 
-      await adminRef.set({
-        name: "Administrators",
-        users: [userDoc.id],
-        createdAt,
-        updatedAt,
-      });
-    }
+    await testRef.set({
+      name: "Test",
+      accounts: [user.uid],
+      createdAt,
+      updatedAt,
+    });
+
+    const userDoc = await testRef.collection("users").add({
+      name: "Primary user",
+      email: process.env.PRIMARY_USER_EMAIL,
+      createdAt,
+      updatedAt,
+    });
+
+    await testRef.collection("accounts").doc(user.uid).set({
+      user: userDoc.id,
+      createdAt,
+      updatedAt,
+    });
+
+    await testRef.collection("groups").doc("managers").set({
+      name: "Managers",
+      users: [userDoc.id],
+      createdAt,
+      updatedAt,
+    });
   }
 
   logger.info(`set data version: ${dataVersion}.`);
