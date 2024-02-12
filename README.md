@@ -16,7 +16,7 @@ git clone git@github.com:MichinobuMaeda/curuviho.git
 cd curuviho
 npm i
 npm i --prefix functions
-flutter pug get
+fvm flutter pug get
 npm test
 npm start
 dart run build_runner watch

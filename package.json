@@ -4,11 +4,12 @@
   "description": "Test tools",
   "scripts": {
     "test:functions": "npm test --prefix functions",
-    "test:ui": "flutter test --coverage",
+    "test:ui": "fvm flutter test --coverage",
     "test:data": "curl -X POST http://127.0.0.1:5001/curuviho/asia-northeast2/generateTestData -d '{\"data\":{}}' -H 'Content-Type: application/json'",
     "test:firestore": "npx firebase emulators:exec --only auth,functions,firestore 'npm run test:data && node test/firestore/test_rules.js'",
     "test": "npm run test:functions && npm run test:firestore && npm run test:ui",
-    "start": "npx firebase emulators:exec --only auth,functions,firestore,storage --ui 'npm run test:data && fvm flutter run'"
+    "start": "npx firebase emulators:exec --only auth,functions,firestore,storage --ui 'npm run test:data && fvm flutter run -d chrome'",
+    "build_runner": "dart run build_runner watch"
   },
   "author": "Michinobu Maeda",
   "license": "BSD-3-Clause",

@@ -6,11 +6,11 @@ part of 'ui_version_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$uiVersionHash() => r'477c15d57732c9c187e09172f8dddd50b77c2f51';
+String _$uiVersionHash() => r'cd469ddefebccd6df4fb533df190a50c67f0a28e';
 
 /// See also [uiVersion].
 @ProviderFor(uiVersion)
-final uiVersionProvider = AutoDisposeStreamProvider<UiVersion>.internal(
+final uiVersionProvider = AutoDisposeStreamProvider<String?>.internal(
   uiVersion,
   name: r'uiVersionProvider',
   debugGetCreateSourceHash:
@@ -19,6 +19,6 @@ final uiVersionProvider = AutoDisposeStreamProvider<UiVersion>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef UiVersionRef = AutoDisposeStreamProviderRef<UiVersion>;
+typedef UiVersionRef = AutoDisposeStreamProviderRef<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
