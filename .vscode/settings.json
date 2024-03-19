@@ -1,15 +1,18 @@
 {
-    "cSpell.words": [
-        "ARGB",
-        "canonicalized",
-        "curuviho",
-        "Flev",
-        "gserviceaccount",
-        "LNBW",
-        "mktemp",
-        "NKBCK",
-        "QFVJ",
-        "sublist",
-        "uids"
-    ]
+  "cSpell.words": [
+    "ARGB",
+    "canonicalized",
+    "curuviho",
+    "Flev",
+    "fpdart",
+    "gserviceaccount",
+    "LNBW",
+    "mktemp",
+    "NKBCK",
+    "prefs",
+    "QFVJ",
+    "sublist",
+    "uids"
+  ],
+  "dart.flutterSdkPath": ".fvm/versions/3.19.3"
 }

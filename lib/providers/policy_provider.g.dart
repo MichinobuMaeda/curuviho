@@ -6,11 +6,11 @@ part of 'policy_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$policyHash() => r'2bb53a4efcf5876088da61fa975ed64fcdffb61d';
+String _$policyHash() => r'436ac4dc27910ff829a39f2280984cf2f04f6269';
 
 /// See also [policy].
 @ProviderFor(policy)
-final policyProvider = AutoDisposeStreamProvider<String?>.internal(
+final policyProvider = StreamProvider<String?>.internal(
   policy,
   name: r'policyProvider',
   debugGetCreateSourceHash:
@@ -19,6 +19,6 @@ final policyProvider = AutoDisposeStreamProvider<String?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PolicyRef = AutoDisposeStreamProviderRef<String?>;
+typedef PolicyRef = StreamProviderRef<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

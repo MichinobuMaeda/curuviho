@@ -1,5 +1,8 @@
 # Project-specific
 
+# FVM Version Cache
+.fvm/
+
 # Miscellaneous
 *.class
 *.log
@@ -45,7 +48,6 @@ app.*.map.json
 /android/app/release
 node_modules
 
-
 node_modules
 /build
 /.svelte-kit
@@ -55,7 +57,6 @@ node_modules
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
 
 ## https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
 
@@ -71,7 +72,6 @@ vite.config.ts.timestamp-*
 
 # Built Visual Studio Code Extensions
 *.vsix
-
 
 ## https://github.com/github/gitignore/blob/main/Node.gitignore
 
@@ -206,7 +206,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
 ## https://github.com/github/gitignore/blob/main/Global/Windows.gitignore
 
 # Windows thumbnail cache files
@@ -233,7 +232,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
 
 ## https://github.com/github/gitignore/blob/main/Global/macOS.gitignore
 
@@ -264,7 +262,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
 ## https://github.com/github/gitignore/blob/main/Global/Linux.gitignore
 *~
 
@@ -279,7 +276,6 @@ Temporary Items
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
-
 
 # Project-specific
 !/functions/.env

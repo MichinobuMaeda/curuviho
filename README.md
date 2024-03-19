@@ -19,7 +19,7 @@ npm i --prefix functions
 fvm flutter pug get
 npm test
 npm start
-dart run build_runner watch
+fvm dart run build_runner watch
 ```
 
 ## Data structure

@@ -14,16 +14,11 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Conf _$ConfFromJson(Map<String, dynamic> json) {
-  return _Conf.fromJson(json);
-}
-
 /// @nodoc
 mixin _$Conf {
   String? get uiVersion => throw _privateConstructorUsedError;
   String? get policy => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ConfCopyWith<Conf> get copyWith => throw _privateConstructorUsedError;
 }
@@ -102,12 +97,9 @@ class __$$ConfImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$ConfImpl with DiagnosticableTreeMixin implements _Conf {
   const _$ConfImpl({required this.uiVersion, required this.policy});
-
-  factory _$ConfImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ConfImplFromJson(json);
 
   @override
   final String? uiVersion;
@@ -138,7 +130,6 @@ class _$ConfImpl with DiagnosticableTreeMixin implements _Conf {
             (identical(other.policy, policy) || other.policy == policy));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, uiVersion, policy);
 
@@ -147,21 +138,12 @@ class _$ConfImpl with DiagnosticableTreeMixin implements _Conf {
   @pragma('vm:prefer-inline')
   _$$ConfImplCopyWith<_$ConfImpl> get copyWith =>
       __$$ConfImplCopyWithImpl<_$ConfImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ConfImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Conf implements Conf {
   const factory _Conf(
       {required final String? uiVersion,
       required final String? policy}) = _$ConfImpl;
-
-  factory _Conf.fromJson(Map<String, dynamic> json) = _$ConfImpl.fromJson;
 
   @override
   String? get uiVersion;

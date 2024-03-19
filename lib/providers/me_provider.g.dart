@@ -6,11 +6,11 @@ part of 'me_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$meHash() => r'6485bc8a013133ebac0e616497821bf001b8bb57';
+String _$meHash() => r'860429f3ce30635603123e5634d32c8089ee1c43';
 
 /// See also [me].
 @ProviderFor(me)
-final meProvider = AutoDisposeFutureProvider<User?>.internal(
+final meProvider = FutureProvider<User?>.internal(
   me,
   name: r'meProvider',
   debugGetCreateSourceHash:
@@ -19,6 +19,6 @@ final meProvider = AutoDisposeFutureProvider<User?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef MeRef = AutoDisposeFutureProviderRef<User?>;
+typedef MeRef = FutureProviderRef<User?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

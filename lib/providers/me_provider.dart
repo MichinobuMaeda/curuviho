@@ -5,7 +5,7 @@ import '../repositories/firebase_firestore.dart';
 
 part 'me_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<User?> me(MeRef ref) async {
   final id = await ref.watch(
     myAccountProvider.selectAsync((account) => account?.user),

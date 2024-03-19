@@ -5,7 +5,7 @@ import '../repositories/firebase_firestore.dart';
 
 part 'ui_version_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<String?> uiVersion(UiVersionRef ref) async* {
   yield ref.watch(
     confProvider.select(

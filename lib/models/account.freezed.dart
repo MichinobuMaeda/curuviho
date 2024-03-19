@@ -14,17 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Account _$AccountFromJson(Map<String, dynamic> json) {
-  return _Account.fromJson(json);
-}
-
 /// @nodoc
 mixin _$Account {
   String? get name => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   String? get user => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AccountCopyWith<Account> get copyWith => throw _privateConstructorUsedError;
 }
@@ -114,13 +109,10 @@ class __$$AccountImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$AccountImpl with DiagnosticableTreeMixin implements _Account {
   const _$AccountImpl(
       {required this.name, required this.email, required this.user});
-
-  factory _$AccountImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AccountImplFromJson(json);
 
   @override
   final String? name;
@@ -154,7 +146,6 @@ class _$AccountImpl with DiagnosticableTreeMixin implements _Account {
             (identical(other.user, user) || other.user == user));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, name, email, user);
 
@@ -163,13 +154,6 @@ class _$AccountImpl with DiagnosticableTreeMixin implements _Account {
   @pragma('vm:prefer-inline')
   _$$AccountImplCopyWith<_$AccountImpl> get copyWith =>
       __$$AccountImplCopyWithImpl<_$AccountImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AccountImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Account implements Account {
@@ -177,8 +161,6 @@ abstract class _Account implements Account {
       {required final String? name,
       required final String? email,
       required final String? user}) = _$AccountImpl;
-
-  factory _Account.fromJson(Map<String, dynamic> json) = _$AccountImpl.fromJson;
 
   @override
   String? get name;

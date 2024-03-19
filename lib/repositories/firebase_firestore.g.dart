@@ -34,7 +34,7 @@ final usersProvider = StreamProvider<List<User>>.internal(
 );
 
 typedef UsersRef = StreamProviderRef<List<User>>;
-String _$myAccountHash() => r'a5ab9240cc6d3b1bde471e70e2f08d2e79bd606e';
+String _$myAccountHash() => r'1326878a45b2cd20d63cb7d66aa9e6f94af6cee2';
 
 /// See also [myAccount].
 @ProviderFor(myAccount)

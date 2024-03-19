@@ -30,6 +30,7 @@ async function upgradeData(db, auth) {
     await confRef.set({
       dataVersion: 0,
       uiVersion: "",
+      policy: "## Privacy policy",
       createdAt,
       updatedAt,
     });

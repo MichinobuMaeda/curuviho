@@ -9,6 +9,19 @@ import 'firebase_auth.dart';
 
 part 'firebase_firestore.g.dart';
 
+String? getStringValue(
+  DocumentSnapshot<Map<String, dynamic>> doc,
+  String key,
+) =>
+    doc.data()?.containsKey(key) != null ? doc.data()![key] : null;
+
+bool isDeleted(
+  DocumentSnapshot<Map<String, dynamic>> doc,
+) =>
+    (!doc.exists) ||
+    (doc.data()?.containsKey('deletedAt') == true &&
+        doc.get('deletedAt') != null);
+
 @Riverpod(keepAlive: true)
 Stream<Conf> conf(ConfRef ref) => FirebaseFirestore.instance
     .collection('service')
@@ -44,10 +57,13 @@ Future<Account?> myAccount(MyAccountRef ref) async {
                 .doc(user!.uid)
                 .get()
                 .then(
-                  (doc) => (doc.data()?.containsKey('deletedAt') == true &&
-                          doc.get('deletedAt') != null)
+                  (doc) => isDeleted(doc)
                       ? null
-                      : Account.fromFirestoreDoc(doc),
+                      : Account(
+                          name: getStringValue(doc, 'name'),
+                          email: getStringValue(doc, 'email'),
+                          user: getStringValue(doc, 'user'),
+                        ),
                 ),
         error: (error, stack) {
           debugPrintStack(label: error.toString(), stackTrace: stack);

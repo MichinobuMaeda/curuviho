@@ -6,7 +6,7 @@ part of 'org_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$orgHash() => r'ea5576ebb05b141bda9febc02a30737049483ca5';
+String _$orgHash() => r'a5daa7d1a54c0e25a6437ac23311bdb3d6ba7225';
 
 /// See also [Org].
 @ProviderFor(Org)

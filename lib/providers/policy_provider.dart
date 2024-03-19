@@ -5,7 +5,7 @@ import '../repositories/firebase_firestore.dart';
 
 part 'policy_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<String?> policy(PolicyRef ref) async* {
   yield ref.watch(
     confProvider.select(

@@ -14,17 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-AuthUser _$AuthUserFromJson(Map<String, dynamic> json) {
-  return _AuthUser.fromJson(json);
-}
-
 /// @nodoc
 mixin _$AuthUser {
   bool get loaded => throw _privateConstructorUsedError;
   String? get uid => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AuthUserCopyWith<AuthUser> get copyWith =>
       throw _privateConstructorUsedError;
@@ -116,13 +111,10 @@ class __$$AuthUserImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$AuthUserImpl with DiagnosticableTreeMixin implements _AuthUser {
   const _$AuthUserImpl(
       {required this.loaded, required this.uid, required this.email});
-
-  factory _$AuthUserImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AuthUserImplFromJson(json);
 
   @override
   final bool loaded;
@@ -156,7 +148,6 @@ class _$AuthUserImpl with DiagnosticableTreeMixin implements _AuthUser {
             (identical(other.email, email) || other.email == email));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, loaded, uid, email);
 
@@ -165,13 +156,6 @@ class _$AuthUserImpl with DiagnosticableTreeMixin implements _AuthUser {
   @pragma('vm:prefer-inline')
   _$$AuthUserImplCopyWith<_$AuthUserImpl> get copyWith =>
       __$$AuthUserImplCopyWithImpl<_$AuthUserImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AuthUserImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _AuthUser implements AuthUser {
@@ -179,9 +163,6 @@ abstract class _AuthUser implements AuthUser {
       {required final bool loaded,
       required final String? uid,
       required final String? email}) = _$AuthUserImpl;
-
-  factory _AuthUser.fromJson(Map<String, dynamic> json) =
-      _$AuthUserImpl.fromJson;
 
   @override
   bool get loaded;

@@ -15,13 +15,16 @@ class ScreenAbout extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
-    return ScreenBase([
-      // SliverTitle(intl.aboutThisApp),
-      const SliverVersion(),
-      const SliverLogo(),
-      const SliverPrivacyPolicy(),
-      SliverTitle(t.licenses),
-      const SliverLicenseList(),
-    ], AppState.loading);
+    return ScreenBase(
+      [
+        SliverTitle(t.aboutThisApp),
+        const SliverVersion(),
+        const SliverLogo(),
+        const SliverPrivacyPolicy(),
+        SliverTitle(t.licenses),
+        const SliverLicenseList(),
+      ],
+      AppState.loading,
+    );
   }
 }
