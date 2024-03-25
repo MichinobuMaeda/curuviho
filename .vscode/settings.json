@@ -12,7 +12,10 @@
     "prefs",
     "QFVJ",
     "sublist",
-    "uids"
+    "uids",
+    "venv"
   ],
-  "dart.flutterSdkPath": ".fvm/versions/3.19.3"
+  "dart.flutterSdkPath": ".fvm/versions/3.19.4",
+  "python.createEnvironment.trigger": "off",
+  "files.trimTrailingWhitespace": true
 }
